@@ -2,6 +2,10 @@ import os
 from cerebras.cloud.sdk import Cerebras
 import random
 
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+
 from template import generate_feature_space, generate_prompt
 from masking import generate_distractor_features, generate_distractor_prompt, generate_masked_prompt
 
@@ -140,6 +144,33 @@ def run_masked_experiment():
         # Calculate accuracy
         accuracy = correct_predictions / num_trials
         print(f"\nAccuracy under {condition} condition: {accuracy * 100:.2f}%\n")
+
+def plot_feature_representations(features, labels, method="pca", title="Feature Representations"):
+        """
+        Visualize feature representations using PCA or t-SNE.
+        
+        Args:
+        - features (np.array): The high-dimensional feature vectors.
+        - labels (list): The corresponding labels for each feature vector.
+        - method (str): 'pca' or 'tsne' for dimensionality reduction.
+        - title (str): The title of the plot.
+        """
+        if method == "pca":
+            reducer = PCA(n_components=2)
+        elif method == "tsne":
+            reducer = TSNE(n_components=2, random_state=42)
+        else:
+            raise ValueError("Unsupported method. Use 'pca' or 'tsne'.")
+
+        reduced_features = reducer.fit_transform(features)
+
+        plt.figure(figsize=(10, 6))
+        scatter = plt.scatter(reduced_features[:, 0], reduced_features[:, 1], c=labels, cmap='viridis', alpha=0.7)
+        plt.colorbar(scatter, label="Label Index")
+        plt.title(title)
+        plt.xlabel("Component 1")
+        plt.ylabel("Component 2")
+        plt.show()
 
 
 # Step 5: Execute the Experiment
