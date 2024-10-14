@@ -118,6 +118,6 @@ def plot_time_vs_accuracy(accuracy_results):
 # Execute the experiment
 if __name__ == "__main__":
     print("Starting time-constrained inference experiment...\n")
-    results = run_time_constraint_experiment(time_limits=[0.5, 1.0, 2.0], num_trials=5)
+    results = run_time_constraint_experiment(time_limits=[0.5, 1.0, 2.0], num_trials=20)
     print("\nExperiment results:", results)
     plot_time_vs_accuracy(results)
